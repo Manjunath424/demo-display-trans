@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Content Security Policy
+      ─────────────────────────────────────────────────────────────────────
+      • default-src 'self'      → only load resources from own origin
+      • script-src 'self'       → no inline scripts, no eval()
+      • style-src 'self' 'unsafe-inline' → Tailwind requires inline styles
+      • img-src 'self' data:    → allow base64 avatars
+      • connect-src: allow API + WebSocket endpoints
+      • frame-ancestors 'none'  → prevents clickjacking (replaces X-Frame-Options)
+      ─────────────────────────────────────────────────────────────────────
+      NOTE: For production, move CSP to a real HTTP response header
+      (not a meta tag) so frame-ancestors is enforced by browsers.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: blob:;
+        connect-src 'self' http://localhost:5000 ws://localhost:5000;
+        frame-ancestors 'none';
+        base-uri 'self';
+        form-action 'self';
+      "
+    />
+
+    <!-- Prevent MIME sniffing -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+    <!-- Referrer policy: only send origin on same-origin requests -->
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <!-- Permissions: disable unnecessary browser features -->
+    <meta
+      http-equiv="Permissions-Policy"
+      content="camera=(), microphone=(), geolocation=(), payment=()"
+    />
+
+    <!-- App metadata -->
+    <title>Live Display Translator</title>
+    <meta
+      name="description"
+      content="Real-time multilingual translation powered by WebSocket streaming."
+    />
+    <meta name="theme-color" content="#3b72f6" />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Preconnect to Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="h-full bg-surface-muted antialiased">
+    <!--
+      noscript: shown when JavaScript is disabled.
+      The app is not usable without JS.
+    -->
+    <noscript>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          font-family: sans-serif;
+          color: #1e293b;
+          background: #f8fafc;
+          text-align: center;
+          padding: 2rem;
+        "
+      >
+        <div>
+          <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">
+            JavaScript Required
+          </h1>
+          <p>Live Display Translator requires JavaScript to run. Please enable it in your browser settings.</p>
+        </div>
+      </div>
+    </noscript>
+
+    <!-- React root — do NOT add anything else here -->
+    <div id="root" class="h-full"></div>
+
+    <!-- Entry point (Vite injects the correct script tag on build) -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

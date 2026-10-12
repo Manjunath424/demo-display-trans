@@ -1,0 +1,188 @@
+/* ============================================================
+   Global Styles — Live Display Translator
+   ============================================================
+   Import order matters:
+   1. Tailwind base   — resets & sensible defaults
+   2. Tailwind components — reusable class groups
+   3. Tailwind utilities  — utility classes (must be last to win)
+   4. Custom global styles that can't be expressed via utilities
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base layer overrides ───────────────────────────────────── */
+@layer base {
+  /* Smooth scrolling everywhere */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Body defaults */
+  body {
+    @apply font-sans text-slate-800 bg-surface-muted;
+  }
+
+  /* Focus-visible ring — keyboard navigation accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-translator-500 ring-offset-2;
+  }
+
+  /* Remove default focus ring (we handle it above) */
+  :focus:not(:focus-visible) {
+    @apply outline-none;
+  }
+
+  /* Selection colour */
+  ::selection {
+    @apply bg-translator-100 text-translator-900;
+  }
+
+  /* Scrollbar — webkit only */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400;
+  }
+}
+
+/* ── Component layer — reusable design tokens ───────────────── */
+@layer components {
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2 rounded-xl
+           bg-translator-600 text-white font-medium text-sm
+           shadow-sm hover:bg-translator-700 active:bg-translator-800
+           transition-colors duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Secondary/outline button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2 rounded-xl
+           border border-surface-border text-slate-700 font-medium text-sm
+           bg-white hover:bg-slate-50 active:bg-slate-100
+           transition-colors duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Danger button */
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2 rounded-xl
+           bg-danger-500 text-white font-medium text-sm
+           hover:bg-danger-700 active:opacity-90
+           transition-colors duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Card surface */
+  .card {
+    @apply bg-white rounded-xl3 shadow-card border border-surface-border;
+  }
+
+  /* Form input */
+  .input {
+    @apply block w-full rounded-xl
+           border border-surface-border bg-white
+           px-3 py-2.5 text-sm text-slate-900
+           placeholder:text-slate-400
+           focus:border-translator-500 focus:ring-2 focus:ring-translator-500/20
+           transition-colors duration-150;
+  }
+
+  /* Form label */
+  .label {
+    @apply block text-sm font-medium text-slate-700 mb-1;
+  }
+
+  /* Error message */
+  .field-error {
+    @apply mt-1 text-xs text-danger-500;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5
+           rounded-full text-xs font-medium;
+  }
+
+  /* Connection status dot */
+  .status-dot {
+    @apply inline-block w-2 h-2 rounded-full;
+  }
+}
+
+/* ── Utility layer — one-off helpers ────────────────────────── */
+@layer utilities {
+  /* Glass morphism surface */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md shadow-glass border border-white/40;
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    @apply bg-gradient-to-r from-translator-600 to-accent-500
+           bg-clip-text text-transparent;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Translator pane textarea */
+  .translator-textarea {
+    @apply w-full h-full resize-none bg-transparent
+           text-base text-slate-900 leading-relaxed
+           placeholder:text-slate-400
+           focus:outline-none;
+  }
+}
+
+/* ── Keyframe animations not expressible via Tailwind ────────── */
+
+/* Loading skeleton shimmer */
+@keyframes shimmer {
+  0%   { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f4f8 0px,
+    #e2e8f0 40px,
+    #f0f4f8 80px
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* Typing cursor blink for live translation output */
+@keyframes blink-cursor {
+  0%, 100% { border-color: transparent; }
+  50%       { border-color: #3b72f6; }
+}
+
+.typing-cursor::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  border-right: 2px solid #3b72f6;
+  animation: blink-cursor 0.8s step-end infinite;
+}
